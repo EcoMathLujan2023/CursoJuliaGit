@@ -42,7 +42,11 @@ function mover_peces(n_peces, n_pasos, distancia_maxima, x_nidos, y_nidos)
     coordenadas_peces = []
     
     for i in 1:n_peces
-        for j in 1:n_pasos
+        # Asignar la posición inicial del pez al nido
+        xs[i, 1] = x_nidos[i]
+        ys[i, 1] = y_nidos[i]
+        
+        for j in 2:n_pasos
             # Calcular la distancia al nido
             distancia_nido = sqrt((xs[i, j-1] - x_nidos[i])^2 + (ys[i, j-1] - y_nidos[i])^2)
             
@@ -98,7 +102,8 @@ end
 # Configuración de la simulación
 n_peces = 5
 n_pasos = 100
-distancia_maxima = 2.0
+distancia_maxima = 10.0
+distancia_minima = 20.0
 
 # Generar posiciones de los nidos espaciados
 x_nidos, y_nidos = generar_posiciones_nidos(n_peces, distancia_minima)
