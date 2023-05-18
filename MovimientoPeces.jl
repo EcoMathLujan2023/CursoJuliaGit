@@ -59,6 +59,16 @@ function mover_peces(n_peces, n_pasos, distancia_maxima, x_nidos, y_nidos)
                 dirección_x /= distancia_nido
                 dirección_y /= distancia_nido
                 
+                # Agregar un componente aleatorio a la dirección
+                θ = 2π * rand()
+                dirección_x += cos(θ)
+                dirección_y += sin(θ)
+                
+                # Normalizar la dirección resultante
+                norma = sqrt(dirección_x^2 + dirección_y^2)
+                dirección_x /= norma
+                dirección_y /= norma
+                
                 # Generar un paso en dirección al nido
                 paso_x = dirección_x * distancia_maxima
                 paso_y = dirección_y * distancia_maxima
@@ -83,13 +93,17 @@ function mover_peces(n_peces, n_pasos, distancia_maxima, x_nidos, y_nidos)
     return coordenadas_peces
 end
 
-function graficar_movimiento(coordenadas_peces, x_nidos, y_nidos)
+function graficar_movimiento(coordenadas_peces, x_nidos, y_nidos, n_peces)
     plot(legend = false, aspect_ratio = 1)
     
-    for ((xs, ys), (x_nido, y_nido)) in zip(coordenadas_peces, zip(x_nidos, y_nidos))
-        plot!(xs, ys, seriestype = :path, marker = false)
-        scatter!(xs, ys, color = :blue, marker = :circle, markersize = 3)
-        scatter!([x_nido], [y_nido], color = :blue, marker = :circle, markersize = 5)
+    paleta_colores = palette(:tab10)
+    
+    for ((xs, ys), (x_nido, y_nido), pez) in zip(coordenadas_peces, zip(x_nidos, y_nidos), 1:n_peces)
+        color_trayectoria = paleta_colores[pez]
+        
+        plot!(xs, ys, seriestype = :path, color = color_trayectoria, marker = false)
+        scatter!(xs, ys, color = color_trayectoria, marker = :circle, markersize = 3)
+        scatter!([x_nido], [y_nido], color = color_trayectoria, marker = :circle, markersize = 5)
     end
     
     xlabel!("X")
@@ -112,4 +126,4 @@ x_nidos, y_nidos = generar_posiciones_nidos(n_peces, distancia_minima)
 coordenadas_peces = mover_peces(n_peces, n_pasos, distancia_maxima, x_nidos, y_nidos)
 
 # Graficar el movimiento de los peces y sus nidos
-graficar_movimiento(coordenadas_peces, x_nidos, y_nidos)
+graficar_movimiento(coordenadas_peces, x_nidos, y_nidos, n_peces)
